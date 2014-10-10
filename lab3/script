@@ -1,0 +1,14 @@
+mkdir /tmp/$USER
+mkdir /tmp/$USER/data
+echo "export PGDATA=/tmp/$USER/data" >> ~/.bashrc
+source ~/.bashrc
+cd /tmp/$USER
+initdb
+echo "export PGPORT=1234" >> ~/.bashrc
+source ~/.bashrc
+pg_ctl -o "-p $PGPORT" -D $PGDATA -l logfile start
+pg_ctl status
+echo "export DB_NAME=mydb" >> ~/.bashrc
+source ~/.bashrc
+createdb -p $PGPORT $DB_NAME
+psql -p $PGPORT $DB_NAME <lab3.sql
